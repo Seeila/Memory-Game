@@ -1,0 +1,14 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+.hagrid {
+  width: 100%;
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  grid-gap: 20px; }
+  .hagrid > * {
+    background: blue;
+    color: #fff; }
