@@ -5,6 +5,7 @@
 ******************/
 
 const cards = ["a", "b", "c", "d", "e", "f", "g", "h"];
+const grid = document.getElementById('js-grid');
 
 
 /******************
@@ -33,7 +34,6 @@ function shuffle(el) {
 //insert the cards in the grid section
 function appendCards(el) {
 
-   const grid = document.getElementById('js-grid');
    const fragment = document.createDocumentFragment();
 
    for (let i = 0; i < el.length; i++) {
@@ -60,3 +60,26 @@ function makeGrid(el) {
 }
 
 makeGrid(cards);
+
+
+/******************
+*******************
+MATCHING VERFICATION
+*******************
+******************/
+
+
+grid.addEventListener('click', checkCards);
+
+
+function checkCards(evt) {
+   let tempVal, tempCard;
+   showCard(evt.target);
+}
+
+//if the card is face down, face up
+function showCard( el ) {
+   if (!el.classList.contains('show')) {
+      el.classList.toggle('show');
+   }
+}
