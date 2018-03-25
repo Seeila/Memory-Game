@@ -75,11 +75,33 @@ grid.addEventListener('click', checkCards);
 function checkCards(evt) {
    let tempVal, tempCard;
    showCard(evt.target);
+   verifyCards(evt.target);
 }
 
 //if the card is face down, face up
 function showCard( el ) {
    if (!el.classList.contains('show')) {
       el.classList.toggle('show');
+   }
+}
+
+
+function verifyCards(el) {
+   //list of all the element with a show class
+   let returnedCard = document.querySelectorAll('.show');
+
+   //if the list length is an eod number
+   if (returnedCard.length % 2 !== 0) {
+      //store the card
+      tempCard = el;
+   } else {
+      //if the value of the new clicked card equals the value of the stored card
+      if (el.innerText === tempCard.innerText) {
+         console.log('yay');
+      } else {
+         //put the twi cards face down
+         el.classList.toggle('show');
+         tempCard.classList.toggle('show');
+      }
    }
 }
