@@ -105,6 +105,7 @@ function verifyCards(el) {
          tempCard.classList.toggle('show');
       }
 
+      moves();
       endingGame(returnedCard);
    }
 }
@@ -160,3 +161,28 @@ function timer() {
 
 grid.addEventListener('click', launchTimer);
 restartBtn.addEventListener('click', launchTimer);
+
+
+/******************
+*******************
+   STARS RATING
+*******************
+******************/
+
+let moveCount = 0;
+const movesSection = document.querySelector('#js-moves');
+
+
+function moves() {
+   // adds 1 to the counter
+   moveCount++;
+
+   // depending the numbers of moves, the stars will be empty or not and show the number of moves
+   if (moveCount < 20 ) {
+      movesSection.innerHTML = `<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
+   } else if (moveCount => 20 && moveCount < 25) {
+      movesSection.innerHTML = `<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
+   } else {
+         movesSection.innerHTML = `<i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
+   }
+}
