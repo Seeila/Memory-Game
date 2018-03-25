@@ -6,6 +6,7 @@
 
 const cards = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const grid = document.getElementById('js-grid');
+const restartBtn = document.getElementById('js-restart');
 
 
 /******************
@@ -118,6 +119,44 @@ function verifyCards(el) {
 //if all the cards have a class show, the game is finished
 function endingGame(el){
    if (el.length === 16) {
-      console.log('finished');
+      //ends the timer
+      clearInterval(timerID);
    }
 }
+
+
+
+/******************
+*******************
+      TIMER
+*******************
+******************/
+let timerID ;
+let min = 0;
+let sec = 0;
+const timerSection = document.querySelector('#js-timer');
+
+function launchTimer() {
+   grid.removeEventListener('click', launchTimer);
+   //each seconds the function timer is called
+   timerID = setInterval(timer, 1000);
+}
+
+function timer() {
+
+   if (sec == 60) {
+      min++;
+      sec = 0;
+   } else {
+      sec++;
+   }
+
+   if (sec > 60) {
+      return false;
+   }
+   // return the minutes and seconds + 0 in front of them if under 10
+   timerSection.innerHTML = `${min > 9 ? min: "0" + min}:${sec > 9 ? sec: "0" + sec}`;
+}
+
+grid.addEventListener('click', launchTimer);
+restartBtn.addEventListener('click', launchTimer);
