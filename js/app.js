@@ -7,6 +7,7 @@
 const cards = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const grid = document.getElementById('js-grid');
 const restartBtn = document.getElementById('js-restart');
+const movesSection = document.querySelector('#js-moves');
 
 
 /******************
@@ -32,6 +33,12 @@ function shuffle(el) {
 *******************
 ******************/
 
+// doubling the cards for the memory game
+cards.forEach(function(card) {
+   cards.push(card);
+});
+
+
 //insert the cards in the grid section
 function appendCards(el) {
 
@@ -50,11 +57,6 @@ function appendCards(el) {
 
 
 function makeGrid(el) {
-
-   // doubling the cards for the memory game
-   cards.forEach(function(card) {
-      cards.push(card);
-   });
 
    shuffle(el);
    appendCards(el);
@@ -138,7 +140,7 @@ let sec = 0;
 const timerSection = document.querySelector('#js-timer');
 
 function launchTimer() {
-   grid.removeEventListener('click', launchTimer);
+   grid.removeEventListener('click', restartGame);
    //each seconds the function timer is called
    timerID = setInterval(timer, 1000);
 }
@@ -159,8 +161,7 @@ function timer() {
    timerSection.innerHTML = `${min > 9 ? min: "0" + min}:${sec > 9 ? sec: "0" + sec}`;
 }
 
-grid.addEventListener('click', launchTimer);
-restartBtn.addEventListener('click', launchTimer);
+grid.addEventListener('click', restartGame);
 
 
 /******************
@@ -170,8 +171,6 @@ restartBtn.addEventListener('click', launchTimer);
 ******************/
 
 let moveCount = 0;
-const movesSection = document.querySelector('#js-moves');
-
 
 function moves() {
    // adds 1 to the counter
@@ -185,4 +184,41 @@ function moves() {
    } else {
          movesSection.innerHTML = `<i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
    }
+}
+
+
+/******************
+*******************
+   RESET BUTTON
+*******************
+******************/
+
+restartBtn.addEventListener('click', restartGame);
+
+function restartGame(evt){
+   if(restartBtn.value === "Start Game") {
+      launchTimer();
+      //change text of button
+      restartBtn.value = "Restart Game";
+   } else {
+      // erases the game
+      resetGrid();
+      //creates a new one
+      makeGrid(cards);
+      //change text of button
+      restartBtn.value = "Start Game";
+      //adds back the event listener to start the timer on the cards
+      grid.addEventListener('click', restartGame);
+   }
+
+}
+
+//stops the timer and resets all the values of the grid
+function resetGrid() {
+   clearInterval(timerID);
+   min = 0;
+   sec = 0;
+   timerSection.innerHTML = '00:00';
+   moveCount = 0;
+   document.getElementById("js-grid").innerHTML = "";
 }
