@@ -103,5 +103,21 @@ function verifyCards(el) {
          el.classList.toggle('show');
          tempCard.classList.toggle('show');
       }
+
+      endingGame(returnedCard);
+   }
+}
+
+
+/******************
+*******************
+   Ending Game
+*******************
+******************/
+
+//if all the cards have a class show, the game is finished
+function endingGame(el){
+   if (el.length === 16) {
+      console.log('finished');
    }
 }
