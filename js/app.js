@@ -122,12 +122,99 @@ function verifyCards(el) {
 //if all the cards have a class show, the game is finished
 function endingGame(el) {
    if (el.length === 16) {
-      //ends the timer
-      clearInterval(timerID);
+      restartModal(el);
    }
 }
 
 
+/******************
+*******************
+   RESET BUTTON
+*******************
+******************/
+
+restartBtn.addEventListener('click', startGame);
+
+function startGame(evt) {
+   if (restartBtn.value === "Start Game") {
+      launchTimer();
+      //change text of button
+      restartBtn.value = "Restart Game";
+   } else {
+      //opens modal
+      restartModal()
+   }
+
+}
+
+//stops the timer and resets all the values of the grid
+function resetGrid() {
+   min = 0;
+   sec = 0;
+   timerSection.innerHTML = '00:00';
+   moveCount = 0;
+   document.getElementById("js-grid").innerHTML = "";
+}
+
+function restartModal(el) {
+      //pauses the timer
+      clearInterval(timerID);
+      const newDiv = document.createElement('div');
+      newDiv.classList.add('modal');
+
+      // if the game is finished
+      if (el.length === 16) {
+         //duration time
+         const durationTime = document.querySelector('.stats-timer');
+         const starts = document.querySelector('.stars');
+         // content of modal
+         newDiv.innerHTML = `<p>${starts.innerHTML}</p>
+         <h2>Congratulations ! </h2>
+         <p>You just won the game in : </p>
+         <p>${durationTime.innerHTML} and ${moveCount} moves </p>
+         <p>Are you sure you want to restart the game?</p>
+         <input type="button" value ="yes"/>`;
+
+      } else {
+         newDiv.innerHTML = `<p>Are you sure you want to restart the game?</p>
+         <input type="button" value ="yes"/>
+         <input type="button" value ="no"/>`;
+      }
+
+      //creates the modal and the appends it
+      document.body.appendChild(newDiv);
+
+      //when modal appended, add click event on both buttons
+      const modalButton = document.querySelectorAll('.modal input');
+      modalButton.forEach(function(item) {
+         item.addEventListener('click', restartGame);
+      })
+
+}
+
+function restartGame(evt) {
+   const inputVal = evt.target.value;
+   const modal = document.querySelector('.modal');
+
+   if (inputVal === "yes") {
+      //closes the modal
+      modal.style.display = 'none';
+      //erases the game
+      resetGrid();
+      //creates a new one
+      makeGrid(cards);
+      //change text of button
+      restartBtn.value = "Start Game";
+      //adds back the event listener to start the timer on the cards
+      grid.addEventListener('click', restartGame);
+   } else {
+      //closes the modal
+      modal.style.display = 'none';
+      //launches back the timer
+      launchTimer();
+   }
+
+}
 
 /******************
 *******************
@@ -178,84 +265,10 @@ function moves() {
 
    // depending the numbers of moves, the stars will be empty or not and show the number of moves
    if (moveCount < 20) {
-      movesSection.innerHTML = `<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
+      movesSection.innerHTML = `<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
    } else if (moveCount => 20 && moveCount < 25) {
-      movesSection.innerHTML = `<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
+      movesSection.innerHTML = `<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div> ${moveCount} moves`;
    } else {
-      movesSection.innerHTML = `<i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
+      movesSection.innerHTML = `<div class="stars"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></div> ${moveCount} moves`;
    }
-}
-
-
-/******************
-*******************
-   RESET BUTTON
-*******************
-******************/
-
-restartBtn.addEventListener('click', startGame);
-
-function startGame(evt) {
-   if (restartBtn.value === "Start Game") {
-      launchTimer();
-      //change text of button
-      restartBtn.value = "Restart Game";
-   } else {
-      //opens modal
-      restartModal()
-   }
-
-}
-
-//stops the timer and resets all the values of the grid
-function resetGrid() {
-   min = 0;
-   sec = 0;
-   timerSection.innerHTML = '00:00';
-   moveCount = 0;
-   document.getElementById("js-grid").innerHTML = "";
-}
-
-function restartModal() {
-      //pauses the timer
-      clearInterval(timerID);
-
-      //creates the modal and the appends it
-      const newDiv = document.createElement('div');
-      newDiv.classList.add('modal');
-      newDiv.innerHTML = `<p>Are you sure you want to restart the game?</p>
-      <input type="button" value ="yes"/>
-      <input type="button" value ="no"/>`;
-      document.body.appendChild(newDiv);
-
-      //when modal appended, add click event on both buttons
-      const modalButton = document.querySelectorAll('.modal input');
-      modalButton.forEach(function(item) {
-         item.addEventListener('click', restartGame);
-      })
-
-}
-
-function restartGame(evt) {
-   const inputVal = evt.target.value;
-   const modal = document.querySelector('.modal');
-
-   if (inputVal === "yes") {
-      //closes the modal
-      modal.style.display = 'none';
-      //erases the game
-      resetGrid();
-      //creates a new one
-      makeGrid(cards);
-      //change text of button
-      restartBtn.value = "Start Game";
-      //adds back the event listener to start the timer on the cards
-      grid.addEventListener('click', restartGame);
-   } else {
-      //closes the modal
-      modal.style.display = 'none';
-      //launches back the timer
-      launchTimer();
-   }
-
 }
