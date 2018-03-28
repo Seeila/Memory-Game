@@ -4,17 +4,96 @@
 *******************
 ******************/
 
-const cards = ["a", "b", "c", "d", "e", "f", "g", "h"];
+const lvlOne = ["a", "b", "c", "d", "e", "f", "g", "h"];
+const lvlTwo = ["i", "j", "k", "l"];
+const lvlThree = ["m", "n", "o", "p"];
+let newLvlOne, newLvlTwo, newLvlThree;
+let currentLvl = 16;
 const grid = document.getElementById('js-grid');
 const restartBtn = document.getElementById('js-restart');
+const lvlBtn = document.getElementById('js-lvl');
 const movesSection = document.querySelector('#js-moves');
 
 
 /******************
 *******************
-   SHUFFLE
+      LEVELS
 *******************
 ******************/
+
+function chooseLvl() {
+   const newDiv = document.createElement('div');
+   newDiv.classList.add('modal-level');
+
+   newDiv.innerHTML = `<h2>Chosse a level</h2>
+   <input type="button" value ="Easy"/>
+   <input type="button" value ="Normal"/>
+   <input type="button" value ="Hard"/>`;
+
+   //creates the modal and the appends it
+   document.body.appendChild(newDiv);
+
+   //when modal appended, add click event on both buttons
+   const modalButton = document.querySelectorAll('.modal-level');
+   modalButton.forEach(function(item) {
+      item.addEventListener('click', startLvl);
+   })
+}
+
+function startLvl(evt) {
+
+   const inputVal = evt.target.value;
+   evt.target.parentNode.style.display = 'none';
+
+   if (inputVal === "Easy" || (inputVal === "yes" &&  currentLvl === 16)) {
+      newLvlOne = [...lvlOne];
+      currentLvl = 16;
+      makeGrid(newLvlOne);
+   } else if (inputVal === "Normal" || (inputVal === "yes" &&  currentLvl === 24)) {
+      currentLvl = 24;
+      newLvlTwo = [...lvlOne, ...lvlTwo];
+      makeGrid(newLvlTwo);
+   } else {
+      currentLvl = 32;
+      newLvlThree = [...lvlOne, ...lvlTwo, ... lvlThree];
+      makeGrid(newLvlThree);
+   }
+
+}
+
+chooseLvl();
+
+lvlBtn.addEventListener('click', chooseLvl);
+/******************
+*******************
+   MAKING GRID
+*******************
+******************/
+
+function makeGrid(el) {
+   resetGrid();
+   doubleCards(el);
+   shuffle(el);
+   appendCards(el);
+}
+
+
+//stops the timer and resets all the values of the grid
+function resetGrid() {
+   min = 0;
+   sec = 0;
+   timerSection.innerHTML = '00:00';
+   moveCount = 0;
+   document.getElementById("js-grid").innerHTML = "";
+}
+
+
+function doubleCards(lvl) {
+   lvl.forEach(function(card) {
+      lvl.push(card);
+   });
+}
+// doubling the cards for the memory game
 
 //shuffles the array -> modern version of the Fisher–Yates shuffle algorithm
 function shuffle(el) {
@@ -26,24 +105,9 @@ function shuffle(el) {
 }
 
 
-
-/******************
-*******************
-   MAKING GRID
-*******************
-******************/
-
-// doubling the cards for the memory game
-cards.forEach(function(card) {
-   cards.push(card);
-});
-
-
 //insert the cards in the grid section
 function appendCards(el) {
-
    const fragment = document.createDocumentFragment();
-
    for (let i = 0; i < el.length; i++) {
       const newDiv = document.createElement('div');
       // add the content of the array's element in the div
@@ -51,18 +115,8 @@ function appendCards(el) {
       newDiv.innerText = divContent;
       fragment.appendChild(newDiv);
    }
-
    grid.appendChild(fragment);
 }
-
-
-function makeGrid(el) {
-
-   shuffle(el);
-   appendCards(el);
-}
-
-makeGrid(cards);
 
 
 /******************
@@ -70,7 +124,6 @@ makeGrid(cards);
 MATCHING VERFICATION
 *******************
 ******************/
-
 
 grid.addEventListener('click', checkCards);
 
@@ -100,7 +153,8 @@ function verifyCards(el) {
    } else {
       //if the value of the new clicked card equals the value of the stored card
       if (el.innerText === tempCard.innerText) {
-         console.log('yay');
+         el.innerHTML = "";
+         tempCard.innerHTML = "";
       } else {
          //put the twi cards face down
          el.classList.toggle('show');
@@ -121,7 +175,7 @@ function verifyCards(el) {
 
 //if all the cards have a class show, the game is finished
 function endingGame(el) {
-   if (el.length === 16) {
+   if (el.length === currentLvl) {
       restartModal(el);
    }
 }
@@ -141,20 +195,14 @@ function startGame(evt) {
       //change text of button
       restartBtn.value = "Restart Game";
    } else {
+      //needs to be declared for restartModal to work
+      let returnedCard = document.querySelectorAll('.show');
       //opens modal
-      restartModal()
+      restartModal(returnedCard)
    }
 
 }
 
-//stops the timer and resets all the values of the grid
-function resetGrid() {
-   min = 0;
-   sec = 0;
-   timerSection.innerHTML = '00:00';
-   moveCount = 0;
-   document.getElementById("js-grid").innerHTML = "";
-}
 
 function restartModal(el) {
       //pauses the timer
@@ -163,7 +211,7 @@ function restartModal(el) {
       newDiv.classList.add('modal');
 
       // if the game is finished
-      if (el.length === 16) {
+      if (el.length === currentLvl) {
          //duration time
          const durationTime = document.querySelector('.stats-timer');
          const starts = document.querySelector('.stars');
@@ -173,12 +221,14 @@ function restartModal(el) {
          <p>You just won the game in : </p>
          <p>${durationTime.innerHTML} and ${moveCount} moves </p>
          <p>Are you sure you want to restart the game?</p>
-         <input type="button" value ="yes"/>`;
+         <input type="button" value ="yes"/>
+         <input type="button" value ="Level"/>`;
 
       } else {
          newDiv.innerHTML = `<p>Are you sure you want to restart the game?</p>
          <input type="button" value ="yes"/>
-         <input type="button" value ="no"/>`;
+         <input type="button" value ="no"/>
+         <input type="button" value ="Level"/>`;
       }
 
       //creates the modal and the appends it
@@ -193,25 +243,27 @@ function restartModal(el) {
 }
 
 function restartGame(evt) {
-   const inputVal = evt.target.value;
    const modal = document.querySelector('.modal');
+   //hides the parent of the target
+   evt.target.parentNode.style.display = 'none';
 
-   if (inputVal === "yes") {
-      //closes the modal
-      modal.style.display = 'none';
-      //erases the game
-      resetGrid();
-      //creates a new one
-      makeGrid(cards);
-      //change text of button
-      restartBtn.value = "Start Game";
-      //adds back the event listener to start the timer on the cards
-      grid.addEventListener('click', restartGame);
-   } else {
-      //closes the modal
-      modal.style.display = 'none';
-      //launches back the timer
-      launchTimer();
+   switch (evt.target.value) {
+      case "yes":
+         //creates a new one
+         startLvl(evt);
+         //change text of button
+         restartBtn.value = "Start Game";
+         //adds back the event listener to start the timer on the cards
+         grid.addEventListener('click', startGame);
+         break;
+
+      case "no":
+         launchTimer();
+         break;
+
+      case "Level":
+         chooseLvl();
+         break;
    }
 
 }
@@ -263,12 +315,50 @@ function moves() {
    // adds 1 to the counter
    moveCount++;
 
-   // depending the numbers of moves, the stars will be empty or not and show the number of moves
-   if (moveCount < 20) {
-      movesSection.innerHTML = `<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
-   } else if (moveCount => 20 && moveCount < 25) {
-      movesSection.innerHTML = `<div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div> ${moveCount} moves`;
-   } else {
-      movesSection.innerHTML = `<div class="stars"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></div> ${moveCount} moves`;
+   const threeStars = `<span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
+
+   const twoStars = `<span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span> ${moveCount} moves`;
+
+   const oneStar = `<span class="stars"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span> ${moveCount} moves`;
+
+// changin the number stars moves depending the level
+   switch(currentLvl) {
+      case 16:
+         if (moveCount < 20) {
+            movesSection.innerHTML = threeStars;
+            break;
+         } else if (moveCount => 20 && moveCount < 25) {
+            movesSection.innerHTML = twoStars;
+            break;
+         } else {
+            movesSection.innerHTML = oneStar;
+            break;
+         }
+
+      case 24:
+         if (moveCount < 30) {
+            movesSection.innerHTML = threeStars;
+            break;
+         } else if (moveCount => 30 && moveCount < 40) {
+            movesSection.innerHTML = twoStars;
+            break;
+         } else {
+            movesSection.innerHTML = oneStar;
+            break;
+         }
+
+      case 32:
+         if (moveCount < 40) {
+            movesSection.innerHTML = threeStars;
+            break;
+         } else if (moveCount => 40 && moveCount < 55) {
+            movesSection.innerHTML = twoStars;
+            break;
+         } else {
+            movesSection.innerHTML = oneStar;
+            break;
+         }
    }
+   // depending the numbers of moves, the stars will be empty or not and show the number of moves
+
 }
