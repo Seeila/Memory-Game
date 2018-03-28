@@ -18,11 +18,11 @@ const movesSection = document.querySelector('#js-moves');
 
 //shuffles the array -> modern version of the Fisher–Yates shuffle algorithm
 function shuffle(el) {
-    for (let i = 0; i < el.length; i++) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [el[i], el[j]] = [el[j], el[i]];
-    }
-    return el;
+   for (let i = 0; i < el.length; i++) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [el[i], el[j]] = [el[j], el[i]];
+   }
+   return el;
 }
 
 
@@ -48,7 +48,7 @@ function appendCards(el) {
       const newDiv = document.createElement('div');
       // add the content of the array's element in the div
       let divContent = el[i];
-      newDiv.innerText = divContent ;
+      newDiv.innerText = divContent;
       fragment.appendChild(newDiv);
    }
 
@@ -82,7 +82,7 @@ function checkCards(evt) {
 }
 
 //if the card is face down, face up
-function showCard( el ) {
+function showCard(el) {
    if (!el.classList.contains('show')) {
       el.classList.toggle('show');
    }
@@ -120,7 +120,7 @@ function verifyCards(el) {
 ******************/
 
 //if all the cards have a class show, the game is finished
-function endingGame(el){
+function endingGame(el) {
    if (el.length === 16) {
       //ends the timer
       clearInterval(timerID);
@@ -134,13 +134,13 @@ function endingGame(el){
       TIMER
 *******************
 ******************/
-let timerID ;
+let timerID;
 let min = 0;
 let sec = 0;
 const timerSection = document.querySelector('#js-timer');
 
 function launchTimer() {
-   grid.removeEventListener('click', restartGame);
+   grid.removeEventListener('click', startGame);
    //each seconds the function timer is called
    timerID = setInterval(timer, 1000);
 }
@@ -161,7 +161,7 @@ function timer() {
    timerSection.innerHTML = `${min > 9 ? min: "0" + min}:${sec > 9 ? sec: "0" + sec}`;
 }
 
-grid.addEventListener('click', restartGame);
+grid.addEventListener('click', startGame);
 
 
 /******************
@@ -177,12 +177,12 @@ function moves() {
    moveCount++;
 
    // depending the numbers of moves, the stars will be empty or not and show the number of moves
-   if (moveCount < 20 ) {
+   if (moveCount < 20) {
       movesSection.innerHTML = `<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
    } else if (moveCount => 20 && moveCount < 25) {
       movesSection.innerHTML = `<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
    } else {
-         movesSection.innerHTML = `<i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
+      movesSection.innerHTML = `<i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> ${moveCount} moves`;
    }
 }
 
@@ -193,15 +193,57 @@ function moves() {
 *******************
 ******************/
 
-restartBtn.addEventListener('click', restartGame);
+restartBtn.addEventListener('click', startGame);
 
-function restartGame(evt){
-   if(restartBtn.value === "Start Game") {
+function startGame(evt) {
+   if (restartBtn.value === "Start Game") {
       launchTimer();
       //change text of button
       restartBtn.value = "Restart Game";
    } else {
-      // erases the game
+      //opens modal
+      restartModal()
+   }
+
+}
+
+//stops the timer and resets all the values of the grid
+function resetGrid() {
+   min = 0;
+   sec = 0;
+   timerSection.innerHTML = '00:00';
+   moveCount = 0;
+   document.getElementById("js-grid").innerHTML = "";
+}
+
+function restartModal() {
+      //pauses the timer
+      clearInterval(timerID);
+
+      //creates the modal and the appends it
+      const newDiv = document.createElement('div');
+      newDiv.classList.add('modal');
+      newDiv.innerHTML = `<p>Are you sure you want to restart the game?</p>
+      <input type="button" value ="yes"/>
+      <input type="button" value ="no"/>`;
+      document.body.appendChild(newDiv);
+
+      //when modal appended, add click event on both buttons
+      const modalButton = document.querySelectorAll('.modal input');
+      modalButton.forEach(function(item) {
+         item.addEventListener('click', restartGame);
+      })
+
+}
+
+function restartGame(evt) {
+   const inputVal = evt.target.value;
+   const modal = document.querySelector('.modal');
+
+   if (inputVal === "yes") {
+      //closes the modal
+      modal.style.display = 'none';
+      //erases the game
       resetGrid();
       //creates a new one
       makeGrid(cards);
@@ -209,16 +251,11 @@ function restartGame(evt){
       restartBtn.value = "Start Game";
       //adds back the event listener to start the timer on the cards
       grid.addEventListener('click', restartGame);
+   } else {
+      //closes the modal
+      modal.style.display = 'none';
+      //launches back the timer
+      launchTimer();
    }
 
-}
-
-//stops the timer and resets all the values of the grid
-function resetGrid() {
-   clearInterval(timerID);
-   min = 0;
-   sec = 0;
-   timerSection.innerHTML = '00:00';
-   moveCount = 0;
-   document.getElementById("js-grid").innerHTML = "";
 }
