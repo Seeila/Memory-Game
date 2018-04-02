@@ -52,7 +52,18 @@ function chooseLvlModal() {
 }
 
 function startLvl(evt) {
-   const inputVal = evt.target.parentNode.value;
+   // Firefox 1.0+
+   const isFirefox = typeof InstallTrigger !== 'undefined';
+   let inputVal;
+      if (!isFirefox) {
+       // Firefox
+       inputVal = evt.target.parentNode.value;
+   }
+   else{
+       // Chrome, IE, Opera
+       inputVal = evt.target.value;
+   }
+
    let modalWindow = document.querySelector('.modal');
    modalWindow.remove();
    mainContainer.style.maxHeight = '100%';
@@ -100,6 +111,7 @@ function resetGrid() {
    min = 0;
    sec = 0;
    timerSection.innerHTML = '00:00';
+   movesSection.innerHTML = '<span class="stars"><img src="img/onigiri.png"></span>0 moves'
    moveCount = 0;
    document.getElementById("js-grid").innerHTML = "";
    restartBtn.innerText = "START GAME";
