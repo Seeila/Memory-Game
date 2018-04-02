@@ -131,8 +131,8 @@ function appendCards(el) {
       // add the content of the array's element in the div
       let divContent = el[i];
       const card = `<div class="card">
-            <div class="front"><img src="img/empty.png" alt="faced down card"/></div>
-            <div class="back">${el[i]}</div>
+            <div class="front"><img src="img/empty.png" alt="faced down card"/><div class="shadow"></div></div>
+            <div class="back">${el[i]}<div class="shadow"></div></div>
          </div>`;
       newDiv.innerHTML = card;
       newDiv.className = "card-container";
@@ -417,7 +417,7 @@ function restartGame(evt) {
          break;
 
       case "Level":
-         chooseLvl();
+         chooseLvlModal();
          break;
    }
 
