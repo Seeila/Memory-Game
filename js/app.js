@@ -17,6 +17,7 @@ const grid = document.getElementById('js-grid');
 const restartBtn = document.getElementById('js-restart');
 const lvlBtn = document.getElementById('js-lvl');
 const movesSection = document.querySelector('#js-moves');
+const mainContainer = document.querySelector('.main-container');
 
 
 /******************
@@ -25,6 +26,8 @@ const movesSection = document.querySelector('#js-moves');
 *******************
 ******************/
 function chooseLvlModal() {
+   mainContainer.style.maxHeight = '100vh';
+
    const newDiv = document.createElement('div');
    newDiv.classList.add('modal-level');
 
@@ -53,6 +56,7 @@ function startLvl(evt) {
 
    const modalWindow = evt.target.parentNode.parentNode.parentNode.parentNode;
    modalWindow.style.display = 'none';
+   mainContainer.style.maxHeight = '100%';
 
    if (inputVal === "Easy" || (inputVal === "yes" &&  currentLvl === 16)) {
       newLvlOne = [...lvlOne];
@@ -345,6 +349,7 @@ function startGame(evt) {
 
 
 function restartModal(el) {
+      mainContainer.style.maxHeight = '100vh';
       //pauses the timer
       clearInterval(timerID);
       const newDiv = document.createElement('div');
@@ -395,7 +400,7 @@ function restartGame(evt) {
    //hides the parent of the target
    const modalWindow = evt.target.parentNode.parentNode.parentNode.parentNode;
    modalWindow.style.display = 'none';
-
+      mainContainer.style.maxHeight = '100%';
 
    switch (evt.target.parentNode.value) {
       case "yes":
