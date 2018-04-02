@@ -55,33 +55,32 @@ function startLvl(evt) {
    // Firefox 1.0+
    const isFirefox = typeof InstallTrigger !== 'undefined';
    let inputVal;
-      if (!isFirefox) {
-       // Firefox
-       inputVal = evt.target.parentNode.value;
-   }
-   else{
-       // Chrome, IE, Opera
-       inputVal = evt.target.value;
+   if (!isFirefox) {
+      // Firefox
+      inputVal = evt.target.parentNode.value;
+   } else {
+      // Chrome, IE, Opera
+      inputVal = evt.target.value;
    }
 
    let modalWindow = document.querySelector('.modal');
    modalWindow.remove();
    mainContainer.style.maxHeight = '100%';
 
-   if (inputVal === "Easy" || (inputVal === "yes" &&  currentLvl === 16)) {
+   if (inputVal === "Easy" || (inputVal === "yes" && currentLvl === 16)) {
       newLvlOne = [...lvlOne];
       currentLvl = 16;
       grid.style.gridTemplateRows = 'repeat(4, 1fr)';
       makeGrid(newLvlOne);
 
-   } else if (inputVal === "Normal" || (inputVal === "yes" &&  currentLvl === 24)) {
+   } else if (inputVal === "Normal" || (inputVal === "yes" && currentLvl === 24)) {
       currentLvl = 24;
       newLvlTwo = [...lvlOne, ...lvlTwo];
       grid.style.gridTemplateRows = 'repeat(6, 1fr)';
       makeGrid(newLvlTwo);
    } else {
       currentLvl = 32;
-      newLvlThree = [...lvlOne, ...lvlTwo, ... lvlThree];
+      newLvlThree = [...lvlOne, ...lvlTwo, ...lvlThree];
       grid.style.gridTemplateRows = 'repeat(8, 1fr)';
       makeGrid(newLvlThree);
    }
@@ -99,7 +98,7 @@ lvlBtn.addEventListener('click', chooseLvlModal);
 *******************
 ******************/
 
-function makeGrid(el){
+function makeGrid(el) {
    resetGrid();
    doubleCards(el);
    shuffle(el);
@@ -293,8 +292,8 @@ function moves() {
 
    const oneStar = `<span class="stars"><img src="img/onigiri.png"></span> ${moveCount} moves`;
 
-// changin the number stars moves depending the level
-   switch(currentLvl) {
+   // changin the number stars moves depending the level
+   switch (currentLvl) {
       case 16:
          if (moveCount < 20) {
             movesSection.innerHTML = threeStars;
@@ -360,19 +359,19 @@ function startGame(evt) {
 
 
 function restartModal(el) {
-      mainContainer.style.maxHeight = '100vh';
-      //pauses the timer
-      clearInterval(timerID);
-      const newDiv = document.createElement('div');
-      newDiv.classList.add('modal');
+   mainContainer.style.maxHeight = '100vh';
+   //pauses the timer
+   clearInterval(timerID);
+   const newDiv = document.createElement('div');
+   newDiv.classList.add('modal');
 
-      // if the game is finished
-      if (el.length === currentLvl) {
-         //duration time
-         const durationTime = document.querySelector('.stats-timer');
-         const starts = document.querySelector('.stars');
-         // content of modal
-         newDiv.innerHTML = `<div class="modal-inner winner">
+   // if the game is finished
+   if (el.length === currentLvl) {
+      //duration time
+      const durationTime = document.querySelector('.stats-timer');
+      const starts = document.querySelector('.stars');
+      // content of modal
+      newDiv.innerHTML = `<div class="modal-inner winner">
          <p class="move-results">${starts.innerHTML}</p>
          <h2>Congratulations ! </h2>
          <p>You just won the game in : </p>
@@ -384,8 +383,8 @@ function restartModal(el) {
          </section>
          <div/>`;
 
-      } else {
-         newDiv.innerHTML = `<div class="modal-inner">
+   } else {
+      newDiv.innerHTML = `<div class="modal-inner">
             <h2>Are you sure you want to restart the game?</h2>
             <section class="modal-inputs">
                <button type="button" value ="yes" class="btn"><img src="img/panda_easy.png" alt="laughing panda by Freepik"><span>Yes</span></button>
@@ -393,16 +392,16 @@ function restartModal(el) {
                <button type="button" value ="Level" class="btn"><img src="img/levels.png" alt="Sushis by Freepik"><span>Level</span></button>
             </section>
          </div>`;
-      }
+   }
 
-      //creates the modal and the appends it
-      document.body.appendChild(newDiv);
+   //creates the modal and the appends it
+   document.body.appendChild(newDiv);
 
-      //when modal appended, add click event on both buttons
-      const modalButton = document.querySelectorAll('.modal');
-      modalButton.forEach(function(item) {
-         item.addEventListener('click', restartGame);
-      });
+   //when modal appended, add click event on both buttons
+   const modalButton = document.querySelectorAll('.modal');
+   modalButton.forEach(function(item) {
+      item.addEventListener('click', restartGame);
+   });
 
 }
 
@@ -411,13 +410,12 @@ function restartGame(evt) {
    // Firefox 1.0+
    const isFirefox = typeof InstallTrigger !== 'undefined';
    let targetValue;
-      if (!isFirefox) {
-       // Firefox
-       targetValue = evt.target.parentNode.value;
-   }
-   else{
-       // Chrome, IE, Opera
-       targetValue = evt.target.value;
+   if (!isFirefox) {
+      // Firefox
+      targetValue = evt.target.parentNode.value;
+   } else {
+      // Chrome, IE, Opera
+      targetValue = evt.target.value;
    }
    switch (targetValue) {
       case "yes":
