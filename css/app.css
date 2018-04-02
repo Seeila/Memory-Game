@@ -143,7 +143,7 @@ h1 {
       MODALS
 ********************
 *******************/
-.modal, .modal-level {
+.modal {
   width: 100vw;
   height: 100vh;
   position: absolute;
@@ -153,54 +153,54 @@ h1 {
   justify-content: center;
   align-items: center;
   background: rgba(250, 250, 250, 0.6); }
-  .modal .modal-inner, .modal-level .modal-inner {
+  .modal .modal-inner {
     width: 100%;
     max-width: 850px;
     background: #fff;
     text-align: center;
     overflow: hidden; }
-    .modal .modal-inner h2, .modal-level .modal-inner h2 {
+    .modal .modal-inner h2 {
       color: #eba640;
       padding: 30px;
       text-transform: uppercase;
       font-size: 4em;
       font-weight: 100; }
-    .modal .modal-inner .modal-inputs, .modal-level .modal-inner .modal-inputs {
+    .modal .modal-inner .modal-inputs {
       padding: 30px 20px;
       display: flex;
       justify-content: space-around;
       align-items: center;
       background: linear-gradient(to right, #e25e50, #eba640); }
-      .modal .modal-inner .modal-inputs .btn, .modal-level .modal-inner .modal-inputs .btn {
+      .modal .modal-inner .modal-inputs .btn {
         background: none;
         border: none; }
-        .modal .modal-inner .modal-inputs .btn img, .modal-level .modal-inner .modal-inputs .btn img {
+        .modal .modal-inner .modal-inputs .btn img {
           width: 250px;
           display: block;
           transition: 1s;
           cursor: pointer; }
-        .modal .modal-inner .modal-inputs .btn:hover img, .modal-level .modal-inner .modal-inputs .btn:hover img {
+        .modal .modal-inner .modal-inputs .btn:hover img {
           transform: scale(1.2); }
-    .modal .modal-inner.winner, .modal-level .modal-inner.winner {
+    .modal .modal-inner.winner {
       position: relative;
       overflow: visible; }
-      .modal .modal-inner.winner h2, .modal-level .modal-inner.winner h2 {
+      .modal .modal-inner.winner h2 {
         padding-top: 150px; }
-      .modal .modal-inner.winner p, .modal-level .modal-inner.winner p {
+      .modal .modal-inner.winner p {
         margin: 20px 0;
         padding: 0 30px;
         vertical-align: middle;
         font-size: 2.5em;
         color: #747373; }
-        .modal .modal-inner.winner p .red, .modal-level .modal-inner.winner p .red {
+        .modal .modal-inner.winner p .red {
           color: #e25e50; }
-        .modal .modal-inner.winner p.results, .modal-level .modal-inner.winner p.results {
+        .modal .modal-inner.winner p.results {
           font-size: 5em;
           color: #eba640; }
-        .modal .modal-inner.winner p img, .modal-level .modal-inner.winner p img {
+        .modal .modal-inner.winner p img {
           max-height: 100px;
           vertical-align: middle; }
-        .modal .modal-inner.winner p.move-results img, .modal-level .modal-inner.winner p.move-results img {
+        .modal .modal-inner.winner p.move-results img {
           border: 6px solid #e25e50;
           border-radius: 50%;
           background: #fff;

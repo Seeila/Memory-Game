@@ -29,7 +29,7 @@ function chooseLvlModal() {
    mainContainer.style.maxHeight = '100vh';
 
    const newDiv = document.createElement('div');
-   newDiv.classList.add('modal-level');
+   newDiv.classList.add('modal');
 
    newDiv.innerHTML = `<div class="modal-inner">
       <h2>Choose a level</h2>
@@ -45,7 +45,7 @@ function chooseLvlModal() {
    document.body.appendChild(newDiv);
 
    //when modal appended, add click event on both buttons
-   const modalButton = document.querySelectorAll('.modal-level');
+   const modalButton = document.querySelectorAll('.modal');
    modalButton.forEach(function(item) {
       item.addEventListener('click', startLvl);
    });
@@ -53,7 +53,7 @@ function chooseLvlModal() {
 
 function startLvl(evt) {
    const inputVal = evt.target.parentNode.value;
-   let modalWindow = document.querySelector('.modal-level');
+   let modalWindow = document.querySelector('.modal');
    modalWindow.remove();
    mainContainer.style.maxHeight = '100%';
 
@@ -387,21 +387,26 @@ function restartModal(el) {
       document.body.appendChild(newDiv);
 
       //when modal appended, add click event on both buttons
-      const modalButton = document.querySelectorAll('.modal button');
+      const modalButton = document.querySelectorAll('.modal');
       modalButton.forEach(function(item) {
          item.addEventListener('click', restartGame);
-      })
+      });
 
 }
 
 function restartGame(evt) {
-   const modal = document.querySelector('.modal');
-   //hides the parent of the target
-   const modalWindow = document.querySelector('.modal');
-   modalWindow.remove();
-   mainContainer.style.maxHeight = '100%';
-
-   switch (evt.target.parentNode.value) {
+   // Firefox 1.0+
+   const isFirefox = typeof InstallTrigger !== 'undefined';
+   let targetValue;
+      if (!isFirefox) {
+       // Firefox
+       targetValue = evt.target.parentNode.value;
+   }
+   else{
+       // Chrome, IE, Opera
+       targetValue = evt.target.value;
+   }
+   switch (targetValue) {
       case "yes":
          //creates a new one
          startLvl(evt);
@@ -413,6 +418,10 @@ function restartGame(evt) {
 
       case "no":
          launchTimer();
+         //hides the parent of the target
+         const modalWindow = document.querySelector('.modal');
+         modalWindow.remove();
+         mainContainer.style.maxHeight = '100%';
          break;
 
       case "Level":
