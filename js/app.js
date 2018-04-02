@@ -4,9 +4,13 @@
 *******************
 ******************/
 
-const lvlOne = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const lvlTwo = ["i", "j", "k", "l"];
-const lvlThree = ["m", "n", "o", "p"];
+
+const lvlOne = ["<img src='img/cards_01.png' alt='hiragana a'>", '<img src="img/cards_02.png" alt="hiragana i">', '<img src="img/cards_03.png" alt="hiragana u">', '<img src="img/cards_04.png" alt="hiragana e">', '<img src="img/cards_05.png" alt="hiragana o">', '<img src="img/cards_06.png" alt="hiragana ka">', '<img src="img/cards_07.png" alt="hiragana ki">', '<img src="img/cards_08.png" alt="hiragana ku">'];
+
+const lvlTwo = ['<img src="img/cards_09.png" alt="hiragana ke">', '<img src="img/cards_10.png" alt="hiragana ko">', '<img src="img/cards_11.png" alt="hiragana sa">', '<img src="img/cards_12.png" alt="hiragana shi">'];
+
+const lvlThree = ['<img src="img/cards_13.png" alt="hiragana su">', '<img src="img/cards_14.png" alt="hiragana se">', '<img src="img/cards_15.png" alt="hiragana so">', '<img src="img/cards_16.png" alt="hiragana n">'];
+
 let newLvlOne, newLvlTwo, newLvlThree;
 let currentLvl = 16;
 const grid = document.getElementById('js-grid');
@@ -20,15 +24,19 @@ const movesSection = document.querySelector('#js-moves');
       LEVELS
 *******************
 ******************/
-
-function chooseLvl() {
+function chooseLvlModal() {
    const newDiv = document.createElement('div');
    newDiv.classList.add('modal-level');
 
-   newDiv.innerHTML = `<h2>Chosse a level</h2>
-   <input type="button" value ="Easy"/>
-   <input type="button" value ="Normal"/>
-   <input type="button" value ="Hard"/>`;
+   newDiv.innerHTML = `<div class="modal-inner">
+      <h2>Choose a level</h2>
+      <section class="modal-inputs">
+         <button type="button" value ="Easy" class="btn"><img src="img/panda_easy.png" alt="laughing panda by Freepik"><span>Easy</span></button>
+         <button type="button" value ="Normal" class="btn"><img src="img/panda_medium.png" alt="Straight face panda by Freepik"><span>Normal</span></button>
+         <button type="button" value ="Hard" class="btn"/><img src="img/panda_hard.png" alt="Crying panda by Freepik"><span>Hard</span></button>
+      </section>
+   </div>`;
+   // span around text inside btn to make text same lvl as image when onclick
 
    //creates the modal and the appends it
    document.body.appendChild(newDiv);
@@ -37,46 +45,54 @@ function chooseLvl() {
    const modalButton = document.querySelectorAll('.modal-level');
    modalButton.forEach(function(item) {
       item.addEventListener('click', startLvl);
-   })
+   });
 }
 
 function startLvl(evt) {
+   const inputVal = evt.target.parentNode.value;
 
-   const inputVal = evt.target.value;
-   evt.target.parentNode.style.display = 'none';
+   const modalWindow = evt.target.parentNode.parentNode.parentNode.parentNode;
+   modalWindow.style.display = 'none';
 
    if (inputVal === "Easy" || (inputVal === "yes" &&  currentLvl === 16)) {
       newLvlOne = [...lvlOne];
       currentLvl = 16;
+      grid.style.gridTemplateRows = 'repeat(4, 1fr)';
       makeGrid(newLvlOne);
+
    } else if (inputVal === "Normal" || (inputVal === "yes" &&  currentLvl === 24)) {
       currentLvl = 24;
       newLvlTwo = [...lvlOne, ...lvlTwo];
+      console.log(newLvlTwo);
+      grid.style.gridTemplateRows = 'repeat(6, 1fr)';
       makeGrid(newLvlTwo);
    } else {
       currentLvl = 32;
       newLvlThree = [...lvlOne, ...lvlTwo, ... lvlThree];
+      console.log(newLvlThree);
+      grid.style.gridTemplateRows = 'repeat(8, 1fr)';
       makeGrid(newLvlThree);
    }
-
 }
 
-chooseLvl();
+chooseLvlModal();
 
-lvlBtn.addEventListener('click', chooseLvl);
+lvlBtn.addEventListener('click', chooseLvlModal);
+
+
+
 /******************
 *******************
    MAKING GRID
 *******************
 ******************/
 
-function makeGrid(el) {
+function makeGrid(el){
    resetGrid();
    doubleCards(el);
    shuffle(el);
    appendCards(el);
 }
-
 
 //stops the timer and resets all the values of the grid
 function resetGrid() {
@@ -104,7 +120,6 @@ function shuffle(el) {
    return el;
 }
 
-
 //insert the cards in the grid section
 function appendCards(el) {
    const fragment = document.createDocumentFragment();
@@ -112,161 +127,22 @@ function appendCards(el) {
       const newDiv = document.createElement('div');
       // add the content of the array's element in the div
       let divContent = el[i];
-      newDiv.innerText = divContent;
+      const card = `<div class="card">
+            <div class="front"><img src="img/empty.png" alt="faced down card"/></div>
+            <div class="back">${el[i]}</div>
+         </div>`;
+      newDiv.innerHTML = card;
+      newDiv.className = "card-container";
       fragment.appendChild(newDiv);
    }
    grid.appendChild(fragment);
+
+   const numberCards = document.querySelectorAll('.card');
+   numberCards.forEach(function(card) {
+      card.addEventListener('click', flippCards);
+   });
 }
 
-
-/******************
-*******************
-MATCHING VERFICATION
-*******************
-******************/
-
-grid.addEventListener('click', checkCards);
-
-
-function checkCards(evt) {
-   let tempVal, tempCard;
-   showCard(evt.target);
-   verifyCards(evt.target);
-}
-
-//if the card is face down, face up
-function showCard(el) {
-   if (!el.classList.contains('show')) {
-      el.classList.toggle('show');
-   }
-}
-
-
-function verifyCards(el) {
-   //list of all the element with a show class
-   let returnedCard = document.querySelectorAll('.show');
-
-   //if the list length is an eod number
-   if (returnedCard.length % 2 !== 0) {
-      //store the card
-      tempCard = el;
-   } else {
-      //if the value of the new clicked card equals the value of the stored card
-      if (el.innerText === tempCard.innerText) {
-         el.innerHTML = "";
-         tempCard.innerHTML = "";
-      } else {
-         //put the twi cards face down
-         el.classList.toggle('show');
-         tempCard.classList.toggle('show');
-      }
-
-      moves();
-      endingGame(returnedCard);
-   }
-}
-
-
-/******************
-*******************
-   Ending Game
-*******************
-******************/
-
-//if all the cards have a class show, the game is finished
-function endingGame(el) {
-   if (el.length === currentLvl) {
-      restartModal(el);
-   }
-}
-
-
-/******************
-*******************
-   RESET BUTTON
-*******************
-******************/
-
-restartBtn.addEventListener('click', startGame);
-
-function startGame(evt) {
-   if (restartBtn.value === "Start Game") {
-      launchTimer();
-      //change text of button
-      restartBtn.value = "Restart Game";
-   } else {
-      //needs to be declared for restartModal to work
-      let returnedCard = document.querySelectorAll('.show');
-      //opens modal
-      restartModal(returnedCard)
-   }
-
-}
-
-
-function restartModal(el) {
-      //pauses the timer
-      clearInterval(timerID);
-      const newDiv = document.createElement('div');
-      newDiv.classList.add('modal');
-
-      // if the game is finished
-      if (el.length === currentLvl) {
-         //duration time
-         const durationTime = document.querySelector('.stats-timer');
-         const starts = document.querySelector('.stars');
-         // content of modal
-         newDiv.innerHTML = `<p>${starts.innerHTML}</p>
-         <h2>Congratulations ! </h2>
-         <p>You just won the game in : </p>
-         <p>${durationTime.innerHTML} and ${moveCount} moves </p>
-         <p>Are you sure you want to restart the game?</p>
-         <input type="button" value ="yes"/>
-         <input type="button" value ="Level"/>`;
-
-      } else {
-         newDiv.innerHTML = `<p>Are you sure you want to restart the game?</p>
-         <input type="button" value ="yes"/>
-         <input type="button" value ="no"/>
-         <input type="button" value ="Level"/>`;
-      }
-
-      //creates the modal and the appends it
-      document.body.appendChild(newDiv);
-
-      //when modal appended, add click event on both buttons
-      const modalButton = document.querySelectorAll('.modal input');
-      modalButton.forEach(function(item) {
-         item.addEventListener('click', restartGame);
-      })
-
-}
-
-function restartGame(evt) {
-   const modal = document.querySelector('.modal');
-   //hides the parent of the target
-   evt.target.parentNode.style.display = 'none';
-
-   switch (evt.target.value) {
-      case "yes":
-         //creates a new one
-         startLvl(evt);
-         //change text of button
-         restartBtn.value = "Start Game";
-         //adds back the event listener to start the timer on the cards
-         grid.addEventListener('click', startGame);
-         break;
-
-      case "no":
-         launchTimer();
-         break;
-
-      case "Level":
-         chooseLvl();
-         break;
-   }
-
-}
 
 /******************
 *******************
@@ -300,7 +176,87 @@ function timer() {
    timerSection.innerHTML = `${min > 9 ? min: "0" + min}:${sec > 9 ? sec: "0" + sec}`;
 }
 
-grid.addEventListener('click', startGame);
+
+
+
+/******************
+*******************
+MATCHING VERFICATION
+*******************
+******************/
+
+function flippCards(evt) {
+   let tempVal, tempCard;
+   const grandParent = evt.target.parentNode.parentNode;
+   //grand parent to aim the div card
+   showCard(grandParent);
+   verifyCards(grandParent);
+}
+
+//if the card is face down, face up
+function showCard(el) {
+   if (!el.classList.contains('show')) {
+      el.classList.toggle('show');
+   }
+}
+
+
+function verifyCards(el) {
+   //list of all the element with a show class
+   const returnedCard = document.querySelectorAll('.show');
+   const cardImage = el.querySelector('.back img');
+   const numberCards = document.querySelectorAll('.card');
+
+   //if the list length is an eod number
+   if (returnedCard.length % 2 !== 0) {
+      //store the card
+      tempCard = cardImage;
+   } else {
+      //doesn't allow more than two cards to be returned at a time
+      numberCards.forEach(function(card) {
+         card.removeEventListener('click', flippCards);
+      });
+      //if the value of the new clicked card equals the value of the stored card
+      if (cardImage.src === tempCard.src) {
+         cardImage.display = "none";
+         tempCard.display = "none";
+         // allows back to flipp cards
+         numberCards.forEach(function(card) {
+            card.addEventListener('click', flippCards);
+         });
+         //doesn't allow the cards shown to be clicked
+         returnedCard.forEach(function(card) {
+            card.removeEventListener('click', flippCards);
+         });
+      } else if (cardImage.src !== tempCard.src) {
+         //put the two cards face down
+         window.setTimeout(function() {
+            el.classList.toggle('show');
+            tempCard.parentNode.parentNode.classList.toggle('show');
+            // allows back to flipp cards
+            numberCards.forEach(function(card) {
+               card.addEventListener('click', flippCards);
+            });
+         }, 1000);
+      }
+
+      moves();
+      endingGame(returnedCard);
+   }
+}
+
+/******************
+*******************
+   Ending Game
+*******************
+******************/
+
+//if all the cards have a class show, the game is finished
+function endingGame(el) {
+   if (el.length === currentLvl) {
+      restartModal(el);
+   }
+}
 
 
 /******************
@@ -315,11 +271,11 @@ function moves() {
    // adds 1 to the counter
    moveCount++;
 
-   const threeStars = `<span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
+   const threeStars = `<span class="stars"><img src="img/nigiri.png"></span> ${moveCount} ${moveCount === 1 ? 'move' : 'moves'}`;
 
-   const twoStars = `<span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span> ${moveCount} moves`;
+   const twoStars = `<span class="stars"><img src="img/maki.png"></span> ${moveCount} moves`;
 
-   const oneStar = `<span class="stars"><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></span> ${moveCount} moves`;
+   const oneStar = `<span class="stars"><img src="img/onigiri.png"></span> ${moveCount} moves`;
 
 // changin the number stars moves depending the level
    switch(currentLvl) {
@@ -360,5 +316,105 @@ function moves() {
          }
    }
    // depending the numbers of moves, the stars will be empty or not and show the number of moves
+
+}
+
+
+/******************
+*******************
+   RESET BUTTON
+*******************
+******************/
+
+restartBtn.addEventListener('click', startGame);
+
+function startGame(evt) {
+
+   console.log(restartBtn.innerText);
+   if (restartBtn.innerText === "START GAME") {
+      launchTimer();
+      //change text of button
+      restartBtn.innerText = "RESTART GAME";
+   } else {
+      //needs to be declared for restartModal to work
+      let returnedCard = document.querySelectorAll('.show');
+      //opens modal
+      restartModal(returnedCard)
+   }
+
+}
+
+
+function restartModal(el) {
+      //pauses the timer
+      clearInterval(timerID);
+      const newDiv = document.createElement('div');
+      newDiv.classList.add('modal');
+
+      // if the game is finished
+      if (el.length === currentLvl) {
+         //duration time
+         const durationTime = document.querySelector('.stats-timer');
+         const starts = document.querySelector('.stars');
+         // content of modal
+         newDiv.innerHTML = `<div class="modal-inner winner">
+         <p class="move-results">${starts.innerHTML}</p>
+         <h2>Congratulations ! </h2>
+         <p>You just won the game in : </p>
+         <p class="results">${durationTime.innerHTML} <span class="red">|</span> ${moveCount} moves </p>
+         <p>Are you sure you want to restart the game?</p>
+         <section class="modal-inputs">
+            <button type="button" value ="yes" class="btn"><img src="img/panda_easy.png" alt="laughing panda by Freepik"><span>Yes</span></button>
+            <button type="button" value ="Level" class="btn"><img src="img/levels.png" alt="Sushis by Freepik"><span>Level</span></button>
+         </section>
+         <div/>`;
+
+      } else {
+         newDiv.innerHTML = `<div class="modal-inner">
+            <h2>Are you sure you want to restart the game?</h2>
+            <section class="modal-inputs">
+               <button type="button" value ="yes" class="btn"><img src="img/panda_easy.png" alt="laughing panda by Freepik"><span>Yes</span></button>
+               <button type="button" value ="no" class="btn"><img src="img/panda_nope.png" alt="Sad panda by Freepik"><span>No</span></button>
+               <button type="button" value ="Level" class="btn"><img src="img/levels.png" alt="Sushis by Freepik"><span>Level</span></button>
+            </section>
+         </div>`;
+      }
+
+      //creates the modal and the appends it
+      document.body.appendChild(newDiv);
+
+      //when modal appended, add click event on both buttons
+      const modalButton = document.querySelectorAll('.modal button');
+      modalButton.forEach(function(item) {
+         item.addEventListener('click', restartGame);
+      })
+
+}
+
+function restartGame(evt) {
+   const modal = document.querySelector('.modal');
+   //hides the parent of the target
+   const modalWindow = evt.target.parentNode.parentNode.parentNode.parentNode;
+   modalWindow.style.display = 'none';
+
+
+   switch (evt.target.parentNode.value) {
+      case "yes":
+         //creates a new one
+         startLvl(evt);
+         //change text of button
+         restartBtn.value = "Start Game";
+         //adds back the event listener to start the timer on the cards
+         grid.addEventListener('click', startGame);
+         break;
+
+      case "no":
+         launchTimer();
+         break;
+
+      case "Level":
+         chooseLvl();
+         break;
+   }
 
 }
