@@ -407,6 +407,7 @@ function restartModal(el) {
 }
 
 function restartGame(evt) {
+   const modalWindow = document.querySelector('.modal');
    // Firefox 1.0+
    const isFirefox = typeof InstallTrigger !== 'undefined';
    let targetValue;
@@ -431,12 +432,13 @@ function restartGame(evt) {
       case "no":
          launchTimer();
          //hides the parent of the target
-         const modalWindow = document.querySelector('.modal');
          modalWindow.remove();
          mainContainer.style.maxHeight = '100%';
          break;
 
       case "Level":
+
+         modalWindow.remove();
          chooseLvlModal();
          break;
    }
