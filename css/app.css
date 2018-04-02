@@ -29,9 +29,11 @@ body {
 
 h1 {
   text-align: center;
-  margin: 150px 0 50px;
+  margin: 150px 0 10px;
   font-size: 5em;
-  grid-area: header; }
+  grid-area: header;
+  text-transform: uppercase;
+  font-weight: 300; }
 
 .btn {
   background: transparent;
@@ -86,7 +88,7 @@ h1 {
 .hagrid {
   max-width: 100%;
   padding: 40px;
-  margin: 50px auto;
+  margin: 10px auto 50px;
   box-sizing: border-box;
   border-radius: 20px;
   display: grid;
@@ -217,3 +219,22 @@ footer {
   vertical-align: center;
   font-size: 2em;
   grid-area: footer; }
+
+/*******************
+********************
+    MEDIAQUERIES
+********************
+*******************/
+@media screen and (min-width: 1024px) {
+  body {
+    font-size: 10px; }
+  .stats p {
+    font-size: 3em; }
+    .stats p img {
+      max-height: 60px;
+      display: inline-block; }
+  .modal .modal-inner, .modal-level .modal-inner {
+    max-width: 650px; }
+    .modal .modal-inner img, .modal-level .modal-inner img {
+      width: 100% !important;
+      max-width: 250px; } }
