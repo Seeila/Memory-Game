@@ -63,13 +63,11 @@ function startLvl(evt) {
    } else if (inputVal === "Normal" || (inputVal === "yes" &&  currentLvl === 24)) {
       currentLvl = 24;
       newLvlTwo = [...lvlOne, ...lvlTwo];
-      console.log(newLvlTwo);
       grid.style.gridTemplateRows = 'repeat(6, 1fr)';
       makeGrid(newLvlTwo);
    } else {
       currentLvl = 32;
       newLvlThree = [...lvlOne, ...lvlTwo, ... lvlThree];
-      console.log(newLvlThree);
       grid.style.gridTemplateRows = 'repeat(8, 1fr)';
       makeGrid(newLvlThree);
    }
@@ -101,6 +99,7 @@ function resetGrid() {
    timerSection.innerHTML = '00:00';
    moveCount = 0;
    document.getElementById("js-grid").innerHTML = "";
+   restartBtn.innerText = "START GAME";
 }
 
 
@@ -141,6 +140,8 @@ function appendCards(el) {
    numberCards.forEach(function(card) {
       card.addEventListener('click', flippCards);
    });
+
+   grid.addEventListener('click', startGame);
 }
 
 
@@ -329,8 +330,6 @@ function moves() {
 restartBtn.addEventListener('click', startGame);
 
 function startGame(evt) {
-
-   console.log(restartBtn.innerText);
    if (restartBtn.innerText === "START GAME") {
       launchTimer();
       //change text of button
