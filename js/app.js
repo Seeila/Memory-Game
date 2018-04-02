@@ -53,9 +53,8 @@ function chooseLvlModal() {
 
 function startLvl(evt) {
    const inputVal = evt.target.parentNode.value;
-
-   const modalWindow = evt.target.parentNode.parentNode.parentNode.parentNode;
-   modalWindow.style.display = 'none';
+   let modalWindow = document.querySelector('.modal-level');
+   modalWindow.remove();
    mainContainer.style.maxHeight = '100%';
 
    if (inputVal === "Easy" || (inputVal === "yes" &&  currentLvl === 16)) {
@@ -398,9 +397,9 @@ function restartModal(el) {
 function restartGame(evt) {
    const modal = document.querySelector('.modal');
    //hides the parent of the target
-   const modalWindow = evt.target.parentNode.parentNode.parentNode.parentNode;
-   modalWindow.style.display = 'none';
-      mainContainer.style.maxHeight = '100%';
+   const modalWindow = document.querySelector('.modal');
+   modalWindow.remove();
+   mainContainer.style.maxHeight = '100%';
 
    switch (evt.target.parentNode.value) {
       case "yes":

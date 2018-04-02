@@ -110,7 +110,8 @@ h1 {
       transition: transform 0.6s;
       transform-style: preserve-3d; }
       .hagrid .card-container .card.show {
-        transform: rotateY(180deg); }
+        transform: rotateY(180deg);
+        cursor: default; }
       .hagrid .card-container .card .front, .hagrid .card-container .card .back {
         display: block;
         height: 100%;
